@@ -20,13 +20,8 @@ const Board: React.FC = () => {
 
     const addNumber = (newGrid: number[]) => {
         let added = false
-        let gridFull = false
         
-        while (!added) {
-            if (gridFull) {
-                break
-            }
-    
+        while (!added) {    
             let position = Math.floor(Math.random() * 16)
             if (newGrid[position] === 0) {
                 newGrid[position] = Math.random() > 0.5 ? 2 : 4;
@@ -90,16 +85,108 @@ const Board: React.FC = () => {
     }
 
     const handleSwipeRight = () => {
-        console.log('direita')
+        let newArray = [...gameState]
 
+        for (let i = 0; i < 4; i++) {
+            let piece_index_1 = (i + 1) * 4 - 1
+            let piece_index_2 = piece_index_1 - 1
+
+            while(piece_index_2 > i * 4 - 1) {
+                if(piece_index_2 === -1) {
+                    piece_index_2 = piece_index_1 - 1
+                    piece_index_1--
+                    continue
+                }
+
+                if(newArray[piece_index_2] === 0) {
+                    piece_index_2--
+                } else if(newArray[piece_index_1] === 0) {
+                    newArray[piece_index_1] = newArray[piece_index_2]
+                    newArray[piece_index_2] = 0
+                } else {
+                    if(newArray[piece_index_1] === newArray[piece_index_2]) {
+                        newArray[piece_index_1] *= 2
+                        newArray[piece_index_2] = 0
+                    } else {
+                        piece_index_1--
+                        piece_index_2 = piece_index_1 - 1
+                    }
+                }
+            }
+        }
+
+        setGameState(newArray)
+        addNumber(newArray)
     }
 
     const handleSwipeUp = () => {
-        console.log('cima')
+        let newArray = [...gameState]
+
+        for(let i = 0; i < 4; i++) {
+            let piece_index_1 = i
+            let piece_index_2 = piece_index_1 + 4
+
+            while(piece_index_1 < (i + 1) * 4) {
+                if(piece_index_2 > 12 + i) {
+                    piece_index_1+=4
+                    piece_index_2 = piece_index_1 + 4
+                    continue
+                }
+
+                if(newArray[piece_index_2] === 0) {
+                    piece_index_2+=4
+                } else if(newArray[piece_index_1] === 0) {
+                    newArray[piece_index_1] = newArray[piece_index_2]
+                    newArray[piece_index_2] = 0
+                } else {
+                    if(newArray[piece_index_1] === newArray[piece_index_2]) {
+                        newArray[piece_index_1] *= 2
+                        newArray[piece_index_2] = 0
+                    } else {
+                        piece_index_1+=4
+                        piece_index_2 = piece_index_1 + 4
+                    }
+                }
+            }
+        }
+        
+        setGameState(newArray)
+        addNumber(newArray)
     }
 
     const handleSwipeDown = () => {
-        console.log('baixo')
+        let newArray = [...gameState]
+
+        for(let i = 0; i < 4; i++) {
+            let piece_index_1 = 12 + i
+            let piece_index_2 = piece_index_1 - 4
+
+            while(piece_index_1 > i) {
+                if(piece_index_2 < i) {
+                    piece_index_1-=4
+                    piece_index_2 = piece_index_1 - 4
+                    continue
+                }
+
+                if(newArray[piece_index_2] === 0) {
+                    piece_index_2-=4
+                } else if(newArray[piece_index_1] === 0) {
+                    newArray[piece_index_1] = newArray[piece_index_2]
+                    newArray[piece_index_2] = 0
+                } else {
+                    if(newArray[piece_index_1] === newArray[piece_index_2]) {
+                        newArray[piece_index_1] *= 2
+                        newArray[piece_index_2] = 0
+                    } else {
+                        piece_index_1-=4
+                        piece_index_2 = piece_index_1 - 4
+                    }
+                }
+            }
+        }
+
+        setGameState(newArray)
+        addNumber(newArray)
     }
 
     useEffect(() => {
@@ -109,9 +196,7 @@ const Board: React.FC = () => {
     useEvent("keydown", handleKeyDown)
 
     return(
-        <div
-            className="board"
-        >
+        <div className="board">
             {gameState.map((digit, index) => 
                 <Piece num={digit} key={index} />
             )}

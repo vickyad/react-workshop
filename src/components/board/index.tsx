@@ -10,12 +10,80 @@ const Board: React.FC = () => {
     const RIGHT_ARROW = 39
 
     const [gameState, setGameState] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-    
+    const [dummy, setDummy] = useState<number[]>([])
+
     const initialize = () => {
         let newGrid = [...gameState];
         addNumber(newGrid);
         addNumber(newGrid);
         setGameState(newGrid);
+    }
+    
+    const resetGame = () => {
+        const emptyGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    
+        addNumber(emptyGrid);
+        addNumber(emptyGrid);
+        setGameState(emptyGrid);
+    }
+
+    const isGameOver = () => {
+        console.log('verificando game over')
+        setDummy([...gameState])
+
+        console.log('Dummy')
+        console.table(dummy)
+    
+        
+        handleSwipeLeft(true);
+
+        console.log('Game State')
+        console.table(gameState)
+        console.log('Dummy')
+        console.table(dummy)
+
+        if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
+            console.log('tem jogada pra esquerda')
+            return false;
+        }
+
+        handleSwipeDown(true);
+
+        console.log('Game State')
+        console.table(gameState)
+        console.log('Dummy')
+        console.table(dummy)
+
+        if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
+            console.log('tem jogada pra direita')
+            return false;
+        }
+
+        handleSwipeRight(true);
+
+        console.log('Game State')
+        console.table(gameState)
+        console.log('Dummy')
+        console.table(dummy)
+
+        if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
+            console.log('tem jogada pra baixo')
+            return false;
+        }
+
+        handleSwipeUp(true);
+
+        console.log('Game State')
+        console.table(gameState)
+        console.log('Dummy')
+        console.table(dummy)
+
+        if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
+            console.log('tem jogada pra cima')
+            return false;
+        }
+
+        return true;
     }
 
     const addNumber = (newGrid: number[]) => {
@@ -29,6 +97,10 @@ const Board: React.FC = () => {
         })
 
         if(left_spaces.length === 0) {
+            if(isGameOver()) {
+                alert('game over')
+                resetGame()
+            }
             return
         }
         
@@ -60,7 +132,7 @@ const Board: React.FC = () => {
         }
     } 
 
-    const handleSwipeLeft = () => {
+    const handleSwipeLeft = (isVerification=false) => {
         let newArray = [...gameState]
 
         for(let i = 0; i < 4; i++) {
@@ -91,11 +163,16 @@ const Board: React.FC = () => {
             }
         }
 
+        if(isVerification) {
+            setDummy(newArray)
+            return
+        }
+
         setGameState(newArray)
         addNumber(newArray)
     }
 
-    const handleSwipeRight = () => {
+    const handleSwipeRight = (isVerification=false) => {
         let newArray = [...gameState]
 
         for (let i = 0; i < 4; i++) {
@@ -126,11 +203,18 @@ const Board: React.FC = () => {
             }
         }
 
+        if(isVerification) {
+            console.table(newArray)
+            setDummy(newArray)
+            console.table(dummy)
+            return
+        }
+
         setGameState(newArray)
         addNumber(newArray)
     }
 
-    const handleSwipeUp = () => {
+    const handleSwipeUp = (isVerification=false) => {
         let newArray = [...gameState]
 
         for(let i = 0; i < 4; i++) {
@@ -160,12 +244,17 @@ const Board: React.FC = () => {
                 }
             }
         }
+
+        if(isVerification) {
+            setDummy(newArray)
+            return
+        }
         
         setGameState(newArray)
         addNumber(newArray)
     }
 
-    const handleSwipeDown = () => {
+    const handleSwipeDown = (isVerification=false) => {
         let newArray = [...gameState]
 
         for(let i = 0; i < 4; i++) {
@@ -194,6 +283,11 @@ const Board: React.FC = () => {
                     }
                 }
             }
+        }
+
+        if(isVerification) {
+            setDummy(newArray)
+            return
         }
 
         setGameState(newArray)

@@ -20,12 +20,23 @@ const Board: React.FC = () => {
 
     const addNumber = (newGrid: number[]) => {
         let added = false
+        let left_spaces: number[] = []
+        
+        newGrid.forEach((value, index) => {
+            if(value === 0) {
+                left_spaces.push(index)
+            }
+        })
+
+        if(left_spaces.length === 0) {
+            return
+        }
         
         while (!added) {    
-            let position = Math.floor(Math.random() * 16)
-            if (newGrid[position] === 0) {
-                newGrid[position] = Math.random() > 0.5 ? 2 : 4;
-                added = true;
+            let position = Math.floor(Math.random() * left_spaces.length)
+            if (newGrid[left_spaces[position]] === 0) {
+                newGrid[left_spaces[position]] = Math.random() > 0.5 ? 2 : 4
+                added = true
             }
         }
     }

@@ -106,10 +106,8 @@ const Board: React.FC = () => {
         
         while (!added) {    
             let position = Math.floor(Math.random() * left_spaces.length)
-            if (newGrid[left_spaces[position]] === 0) {
-                newGrid[left_spaces[position]] = Math.random() > 0.5 ? 2 : 4
-                added = true
-            }
+            newGrid[left_spaces[position]] = Math.random() > 0.5 ? 2 : 4
+            added = true
         }
     }
 

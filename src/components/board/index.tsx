@@ -10,23 +10,69 @@ const Board: React.FC = () => {
     const RIGHT_ARROW = 39
 
     const [gameState, setGameState] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-    
+    const [dummy, setDummy] = useState<number[]>([])
+
     const initialize = () => {
         let newGrid = [...gameState];
         addNumber(newGrid);
         addNumber(newGrid);
         setGameState(newGrid);
     }
+    
+    const resetGame = () => {
+        const emptyGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    
+        addNumber(emptyGrid);
+        addNumber(emptyGrid);
+        setGameState(emptyGrid);
+    }
+
+    const isGameOver = () => {
+        handleSwipeLeft(true);
+        if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
+            return false;
+        }
+
+        handleSwipeDown(true);
+        if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
+            return false;
+        }
+
+        handleSwipeRight(true);
+        if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
+            return false;
+        }
+
+        handleSwipeUp(true);
+        if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
+            return false;
+        }
+
+        return true;
+    }
 
     const addNumber = (newGrid: number[]) => {
         let added = false
+        let left_spaces: number[] = []
+        
+        newGrid.forEach((value, index) => {
+            if(value === 0) {
+                left_spaces.push(index)
+            }
+        })
+
+        if(left_spaces.length === 0) {
+            if(isGameOver()) {
+                alert('game over')
+                resetGame()
+            }
+            return
+        }
         
         while (!added) {    
-            let position = Math.floor(Math.random() * 16)
-            if (newGrid[position] === 0) {
-                newGrid[position] = Math.random() > 0.5 ? 2 : 4;
-                added = true;
-            }
+            let position = Math.floor(Math.random() * left_spaces.length)
+            newGrid[left_spaces[position]] = Math.random() > 0.5 ? 2 : 4
+            added = true
         }
     }
 
@@ -49,7 +95,7 @@ const Board: React.FC = () => {
         }
     } 
 
-    const handleSwipeLeft = () => {
+    const handleSwipeLeft = (isVerification=false) => {
         let newArray = [...gameState]
 
         for(let i = 0; i < 4; i++) {
@@ -80,11 +126,16 @@ const Board: React.FC = () => {
             }
         }
 
+        if(isVerification) {
+            setDummy(newArray)
+            return
+        }
+
         setGameState(newArray)
         addNumber(newArray)
     }
 
-    const handleSwipeRight = () => {
+    const handleSwipeRight = (isVerification=false) => {
         let newArray = [...gameState]
 
         for (let i = 0; i < 4; i++) {
@@ -115,11 +166,18 @@ const Board: React.FC = () => {
             }
         }
 
+        if(isVerification) {
+            console.table(newArray)
+            setDummy(newArray)
+            console.table(dummy)
+            return
+        }
+
         setGameState(newArray)
         addNumber(newArray)
     }
 
-    const handleSwipeUp = () => {
+    const handleSwipeUp = (isVerification=false) => {
         let newArray = [...gameState]
 
         for(let i = 0; i < 4; i++) {
@@ -149,12 +207,17 @@ const Board: React.FC = () => {
                 }
             }
         }
+
+        if(isVerification) {
+            setDummy(newArray)
+            return
+        }
         
         setGameState(newArray)
         addNumber(newArray)
     }
 
-    const handleSwipeDown = () => {
+    const handleSwipeDown = (isVerification=false) => {
         let newArray = [...gameState]
 
         for(let i = 0; i < 4; i++) {
@@ -183,6 +246,11 @@ const Board: React.FC = () => {
                     }
                 }
             }
+        }
+
+        if(isVerification) {
+            setDummy(newArray)
+            return
         }
 
         setGameState(newArray)

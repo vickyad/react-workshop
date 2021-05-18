@@ -28,58 +28,23 @@ const Board: React.FC = () => {
     }
 
     const isGameOver = () => {
-        console.log('verificando game over')
-        setDummy([...gameState])
-
-        console.log('Dummy')
-        console.table(dummy)
-    
-        
         handleSwipeLeft(true);
-
-        console.log('Game State')
-        console.table(gameState)
-        console.log('Dummy')
-        console.table(dummy)
-
         if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
-            console.log('tem jogada pra esquerda')
             return false;
         }
 
         handleSwipeDown(true);
-
-        console.log('Game State')
-        console.table(gameState)
-        console.log('Dummy')
-        console.table(dummy)
-
         if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
-            console.log('tem jogada pra direita')
             return false;
         }
 
         handleSwipeRight(true);
-
-        console.log('Game State')
-        console.table(gameState)
-        console.log('Dummy')
-        console.table(dummy)
-
         if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
-            console.log('tem jogada pra baixo')
             return false;
         }
 
         handleSwipeUp(true);
-
-        console.log('Game State')
-        console.table(gameState)
-        console.log('Dummy')
-        console.table(dummy)
-
         if (JSON.stringify(gameState) !== JSON.stringify(dummy)) {
-            console.log('tem jogada pra cima')
             return false;
         }
 
